@@ -5,10 +5,10 @@ import (
 	"github.com/kuritka/cancel-action/internal/common/runner"
 	"github.com/kuritka/cancel-action/internal/impl"
 	"github.com/kuritka/cancel-action/internal/impl/cancel"
+	"github.com/rs/zerolog"
 	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/logrusorgru/aurora"
-	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
@@ -21,11 +21,10 @@ var cancelCommand = &cobra.Command{
 		opts := &impl.ActionOpts{}
 		err := env.Bind(opts)
 		kingpin.FatalIfError(err, "reading environment variables")
-		logger.Debug().Msgf("loaded configuration: \n %s", aurora.BrightWhite(opts))
 		if opts.Verbose {
 			zerolog.SetGlobalLevel(zerolog.DebugLevel)
 		}
-
+		logger.Debug().Msgf("loaded configuration: \n %s", aurora.BrightWhite(opts))
 		runner.NewCommonRunner(cancel.NewCommand(*opts)).MustRun()
 	},
 }

@@ -34,7 +34,7 @@ runs:
         go run main.go cancel
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
-        GITHUB_REPOSITORY: ${{ github.GITHUB_REPOSITORY }}
+        GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
         GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
         CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
         REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
