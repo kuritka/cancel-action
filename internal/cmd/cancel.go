@@ -24,7 +24,7 @@ var cancelCommand = &cobra.Command{
 		if opts.Verbose {
 			zerolog.SetGlobalLevel(zerolog.DebugLevel)
 		}
-		logger.Debug().Msgf("loaded configuration: \n %s", aurora.BrightWhite(opts))
+		logger.Debug().Msgf("loaded configuration: \n %v", aurora.BrightWhite(opts))
 		runner.NewCommonRunner(cancel.NewCommand(*opts)).MustRun()
 	},
 }
