@@ -1,13 +1,13 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/kuritka/cancel-action/internal/common"
 	"github.com/kuritka/cancel-action/internal/common/log"
-
-	w "github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 
-	"os"
+	w "github.com/logrusorgru/aurora"
 )
 
 var (

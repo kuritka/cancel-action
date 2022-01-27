@@ -6,7 +6,7 @@ branding:
   icon: grid
   color: red
 inputs:
-  cancel-when-job-sucessfully-passed:
+  cancel-when-job-successfully-passed:
     description: "(Optional) A job is automatically cancelled if it has been successfully passed in the past."
     required: false
     default: "false"
@@ -14,6 +14,14 @@ inputs:
     description: "(Optional) If a cancel occurs, it automatically removes the artifact."
     required: false
     default: "false"
+  verbose:
+    description: "(Optional) verbose output."
+    required: false
+    default: "false"
+  token:
+    description: '(Optional) Github token.'
+    required: true
+    default: ${{ github.token }}
 
 runs:
   using: composite
@@ -23,7 +31,11 @@ runs:
       run: |
         cd ${{ github.action_path }}
         go mod tidy
-        go run main.go create
+        go run main.go cancel
       env:
-        ENV_CANCEL_WHEN_JOB_SUCESSFULLY_PASSED: ${{ inputs.cancel-when-job-sucessfully-passed }}
-        ENV_REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
+        GITHUB_TOKEN: ${{ inputs.token }}
+        GITHUB_REPOSITORY: ${{ process.env.GITHUB_REPOSITORY }}
+        GITHUB_RUN_ID: ${{ process.env.GITHUB_RUN_ID }}
+        CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-sucessfully-passed }}
+        REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
+        VERBOSE: ${{ inputs.verbose }}
