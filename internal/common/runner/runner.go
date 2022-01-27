@@ -17,5 +17,5 @@ func NewCommonRunner(command Runner) *CommonRunner {
 // MustRun runs command once and panics if command is broken
 func (r *CommonRunner) MustRun() {
 	err := r.command.Run()
-	kingpin.FatalIfError(err,"command %s failed", r.command.String())
+	kingpin.FatalIfError(err, "command %s failed", r.command.String())
 }

@@ -1,0 +1,55 @@
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - errcheck
+    - gocritic
+    - gocyclo
+    - goimports
+    - revive
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - lll
+    - noctx
+    - rowserrcheck
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - depguard
+    - dogsled
+    - exportloopref
+    - goconst
+    - goprintffuncname
+    - dupl
+
+ # don't enable:
+ #  - golint        # deprecated
+ #  - whitespace
+ #  - funlen
+ #  - exhaustive
+ #  - gomnd
+ #  - gofmt
+ #  - gochecknoinits
+ #  - nolintlint
+
+run:
+  deadline: 3m
+linters-settings:
+  lll:
+    line-length: 150
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl

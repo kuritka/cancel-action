@@ -1,0 +1,22 @@
+name: CANCEL+REMOVE tests
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+    tags-ignore:
+      - '*.*'
+
+jobs:
+  go-inspect:
+    name: Test action
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+       # see: https://golangci-lint.run/usage/configuration/#config-file
+
+      - name: cancel-action
+        uses: ./
+        with:
+          verbose: true
+          token: ${{ secrets.REMOVE_WORKFLOW_TOKEN }}

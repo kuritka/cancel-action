@@ -1,0 +1,69 @@
+name: cancel-action
+description: "Cancelling redundand workglow runs"
+author: kuritka
+# see: https://haya14busa.github.io/github-action-brandings/
+branding:
+  icon: grid
+  color: red
+inputs:
+  cancel-when-job-successfully-passed:
+    description: "(Optional) A job is automatically cancelled if it has been successfully passed in the past."
+    required: false
+    default: "false"
+  remove-artifact:
+    description: "(Optional) If a cancel occurs, it automatically removes the artifact."
+    required: false
+    default: "false"
+  verbose:
+    description: "(Optional) verbose output."
+    required: false
+    default: "false"
+  token:
+    description: '(Optional) Github token.'
+    required: true
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get action tag
+      shell: bash
+      id: get_action_tag
+      run: |
+        echo ${{ github.action_path }}
+        echo ::set-output name=VERSION::$(basename ${{ github.action_path }})
+
+    - name: Setup proper GO version
+      uses: actions/setup-go@v2
+      with:
+        go-version: "1.17.6"
+
+    - name: Action is executed locally in feature branch
+      id: prepare-development-run
+      shell: bash
+      if: ${{ startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
+      run: |
+        echo -e "\033[1;36m BUILD ACTION"
+        cd ${{ github.action_path }}
+        go mod tidy
+        go build -o cancel-action main.go
+
+    - name: Action is executed in someones workflow
+      id: prepare-production-run
+      shell: bash
+      if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
+      run: |
+        echo -e "\033[1;36m DOWNLOAD ACTION"
+        curl -L https://github.com/kuritka/cancel-action/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
+        tar -xvf ./release.tar.gz
+
+    - id: main
+      shell: bash
+      run: |
+        ./cancel-action cancel
+      env:
+        # GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER are already set. Don't need to be passed
+        GITHUB_TOKEN: ${{ inputs.token }}
+        CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
+        REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
+        VERBOSE: ${{ inputs.verbose }}
