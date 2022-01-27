@@ -1,0 +1,29 @@
+name: cancel-action
+description: "Cancelling redundand workglow runs"
+author: kuritka
+# see: https://haya14busa.github.io/github-action-brandings/
+branding:
+  icon: grid
+  color: red
+inputs:
+  cancel-when-job-sucessfully-passed:
+    description: "(Optional) A job is automatically cancelled if it has been successfully passed in the past."
+    required: false
+    default: "false"
+  remove-artifact:
+    description: "(Optional) If a cancel occurs, it automatically removes the artifact."
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - id: main
+      shell: bash
+      run: |
+        cd ${{ github.action_path }}
+        go mod tidy
+        go run main.go create
+      env:
+        ENV_CANCEL_WHEN_JOB_SUCESSFULLY_PASSED: ${{ inputs.cancel-when-job-sucessfully-passed }}
+        ENV_REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}

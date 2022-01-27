@@ -13,6 +13,9 @@
 !*.go
 !go.sum
 !go.mod
+!action.yaml
+!.golangci.yaml
+!Makefile
 
 !README.md
 !LICENSE
