@@ -17,3 +17,6 @@ tidy:
 
 test:
 	go test -v ./...
+
+
+LINT=$(shell which golangci-lint)

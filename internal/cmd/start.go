@@ -4,7 +4,7 @@ import (
 	"github.com/kuritka/cancel-action/internal/common"
 	"github.com/kuritka/cancel-action/internal/common/log"
 
-	. "github.com/logrusorgru/aurora"
+	w "github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 
 	"os"
@@ -20,7 +20,7 @@ var logger = log.Log
 var rootCmd = &cobra.Command{
 	Short: common.Action,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		logger.Info().Msgf("%s %s 🛌 🤺", BrightMagenta(common.Action), BrightYellow("started"))
+		logger.Info().Msgf("%s %s 🛌 🤺", w.BrightMagenta(common.Action), w.BrightYellow("started"))
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
@@ -30,7 +30,7 @@ var rootCmd = &cobra.Command{
 		}
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
-		logger.Info().Msgf("Not sure what to do next? %s %s", BrightWhite("see:"), common.HomeURL)
+		logger.Info().Msgf("Not sure what to do next? %s %s", w.BrightWhite("see:"), common.HomeURL)
 	},
 }
 
