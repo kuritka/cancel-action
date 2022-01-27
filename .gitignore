@@ -13,6 +13,10 @@
 !*.go
 !go.sum
 !go.mod
+!action.yaml
+!.golangci.yaml
+!/.github/workflows/*.yaml
+!Makefile
 
 !README.md
 !LICENSE

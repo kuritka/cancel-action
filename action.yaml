@@ -1,0 +1,62 @@
+name: cancel-action
+description: "Cancelling redundand workglow runs"
+author: kuritka
+# see: https://haya14busa.github.io/github-action-brandings/
+branding:
+  icon: grid
+  color: red
+inputs:
+  cancel-when-job-successfully-passed:
+    description: "(Optional) A job is automatically cancelled if it has been successfully passed in the past."
+    required: false
+    default: "false"
+  remove-artifact:
+    description: "(Optional) If a cancel occurs, it automatically removes the artifact."
+    required: false
+    default: "false"
+  verbose:
+    description: "(Optional) verbose output."
+    required: false
+    default: "false"
+  token:
+    description: '(Optional) Github token.'
+    required: true
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-go@v2
+      with:
+        go-version: "1.17.6"
+
+    - id: prepare-development-run
+      shell: bash
+      if: ${{ startsWith(github.ref, 'refs/heads/') }}
+      run: |
+        echo "DEVELOPMENT RUN" $GITHUB_REPOSITORY
+        VERSION=${{ inputs.generator_version }}
+        echo ${VERSION}
+        cd ${{ github.action_path }}
+        go mod tidy
+        go build -o cancel-action main.go
+
+    - id: prepare-production-run
+      shell: bash
+      if: ${{ !startsWith(github.ref, 'refs/heads/') }}
+      run: |
+        echo "RELEASE RUN"
+        echo https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.tar.gz
+        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.tar.gz -o release.tar.gz
+        tar -xvf ./release.tar.gz
+
+    - id: main
+      shell: bash
+      run: |
+        ./cancel-action cancel
+      env:
+        # GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER are already set. Don't need to be passed
+        GITHUB_TOKEN: ${{ inputs.token }}
+        CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
+        REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
+        VERBOSE: ${{ inputs.verbose }}
