@@ -22,7 +22,7 @@ var cancelCommand = &cobra.Command{
 		err := env.Bind(opts)
 		kingpin.FatalIfError(err, "reading environment variables")
 		logger.Debug().Msgf("loaded configuration: \n %s", aurora.BrightWhite(opts))
-		if Verbose {
+		if opts.Verbose {
 			zerolog.SetGlobalLevel(zerolog.DebugLevel)
 		}
 
