@@ -38,8 +38,6 @@ runs:
         VERSION: ${{inputs.generator_version}}
       run: |
         echo "DEVELOPMENT RUN" $GITHUB_REPOSITORY
-        echo https://github.com/$GITHUB_REPOSITORY/releases/download/v$VERSION/cancel-action_$VERSION_linux_amd64.zip
-
         cd ${{ github.action_path }}
         go mod tidy
         go build main.go
@@ -50,16 +48,16 @@ runs:
       run: |
         echo "RELEASE RUN"
         VERSION=${inputs.generator_version}
+        echo https://github.com/$GITHUB_REPOSITORY/releases/download/v${VERSION}/cancel-action_${VERSION}_linux_amd64.zip -o release.zip
         curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/cancel-action_${VERSION}_linux_amd64.zip -o release.zip
-        ls -la
         unzip ./release.zip
-        ls -la
 
     - id: main
       shell: bash
       run: |
         ./main cancel
       env:
+        # GITHUB_REPOSITORY, GITHUB_REPOSITORY_OWNER are already set. Don't need to be passed
         GITHUB_TOKEN: ${{ inputs.token }}
         CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
         REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
