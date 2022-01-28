@@ -31,23 +31,22 @@ runs:
       with:
         go-version: "1.17.6"
 
-    - id: prepare-development
+    - id: prepare-development-run
       shell: bash
       if: ${{ github.ref == 'refs/heads/master' }}
       run: |
-        echo "DEVELOPMENT RUN"
-        echo ${GITHUB_REPOSITORY} ${GITHUB_REPOSITORY_OWNER}
+        echo "DEVELOPMENT RUN" ${GITHUB_REPOSITORY}
         cd ${{ github.action_path }}
         go mod tidy
         go build main.go
 
-    - id: prepare-release
+    - id: prepare-production-run
       shell: bash
       if: ${{ github.ref != 'refs/heads/master' }}
       run: |
         echo "RELEASE RUN"
         VERSION=${{ inputs.generator_version }}
-        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/${GITHUB_REPOSITORY}_${VERSION}_linux_amd64.zip -o release.zip
+        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/cancel-action_${VERSION}_linux_amd64.zip -o release.zip
         ls -la
         unzip ./release.zip
         ls -la
@@ -57,10 +56,7 @@ runs:
       run: |
         ./main cancel
       env:
-#        GITHUB_REPOSITORY_OWNER: ${GITHUB_REPOSITORY_OWNER}
         GITHUB_TOKEN: ${{ inputs.token }}
-#        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
-#        GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
         CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
         REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
         VERBOSE: ${{ inputs.verbose }}
