@@ -46,15 +46,15 @@ runs:
       run: |
         echo "RELEASE RUN"
         VERSION=${{ inputs.generator_version }}
-        curl -L https://github.com/kuritka/${{ env.GITHUB_REPOSITORY }}/releases/download/v${VERSION}/cancel-action_${VERSION}_linux_amd64.zip -o tfreg.zip
-        unzip tfreg.zip
+        curl -L https://github.com/${{env.GITHUB_REPOSITORY_OWNER}}/${{env.GITHUB_REPOSITORY}}/releases/download/v${VERSION}/${{env.GITHUB_REPOSITORY}}_${VERSION}_linux_amd64.zip -o release.zip
+        unzip release.zip
 
     - id: main
       shell: bash
       run: |
-        echo ${{ env.GITHUB_OWNER }}
         ./main cancel
       env:
+        GITHUB_REPOSITORY_OWNER: ${{env.GITHUB_REPOSITORY_OWNER}}
         GITHUB_TOKEN: ${{ inputs.token }}
         GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
         GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}

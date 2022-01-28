@@ -11,4 +11,5 @@ type GitHub struct {
 	Token      string `env:"TOKEN, require=true"`
 	Repository string `env:"REPOSITORY, require=true"`
 	RunID      string `env:"RUN_ID, require=true"`
+	Owner      string `env:"GITHUB_REPOSITORY_OWNER, require=true"`
 }
