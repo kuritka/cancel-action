@@ -34,12 +34,11 @@ runs:
     - id: prepare-development-run
       shell: bash
       if: ${{ github.ref == 'refs/heads/master' }}
+      env:
+        VERSION: ${{inputs.generator_version}}
       run: |
-        echo "DEVELOPMENT RUN" ${GITHUB_REPOSITORY}
-
-        echo https://github.com/${GITHUB_REPOSITORY}/releases/download/v${inputs.generator_version}/cancel-action_${inputs.generator_version}_linux_amd64.zip
-        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/v${inputs.generator_version}/cancel-action_${inputs.generator_version}_linux_amd64.zip -o release.zip
-        unzip ./release.zip
+        echo "DEVELOPMENT RUN" $GITHUB_REPOSITORY
+        echo https://github.com/$GITHUB_REPOSITORY/releases/download/v$VERSION/cancel-action_$VERSION_linux_amd64.zip
 
         cd ${{ github.action_path }}
         go mod tidy
