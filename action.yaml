@@ -28,7 +28,7 @@ runs:
   steps:
     - name: Get the version
       shell: bash
-      id: get_current_tag
+      id: get_action_tag
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
     - uses: actions/setup-go@v2
@@ -49,11 +49,7 @@ runs:
       if: ${{ !startsWith(github.ref, 'refs/heads/') }}
       run: |
         echo "RELEASE RUN"
-        VERSION=${{ github.event.release.tag_name }}
-        echo ${VERSION}
-        echo ${{ steps.get_current_tag.outputs.VERSION }}
-
-        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.tar.gz -o release.tar.gz
+        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
         tar -xvf ./release.tar.gz
 
     - id: main
