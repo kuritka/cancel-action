@@ -36,6 +36,7 @@ runs:
       if: ${{ github.ref == 'refs/heads/master' }}
       run: |
         echo "DEVELOPMENT RUN"
+        echo ${GITHUB_REPOSITORY} ${GITHUB_REPOSITORY_OWNER}
         cd ${{ github.action_path }}
         go mod tidy
         go build main.go
@@ -56,10 +57,10 @@ runs:
       run: |
         ./main cancel
       env:
-        GITHUB_REPOSITORY_OWNER: ${GITHUB_REPOSITORY_OWNER}
+#        GITHUB_REPOSITORY_OWNER: ${GITHUB_REPOSITORY_OWNER}
         GITHUB_TOKEN: ${{ inputs.token }}
-        GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
-        GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
+#        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+#        GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}
         CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
         REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
         VERBOSE: ${{ inputs.verbose }}
