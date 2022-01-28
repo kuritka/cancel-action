@@ -52,6 +52,7 @@ runs:
     - id: main
       shell: bash
       run: |
+        echo ${{ env.GITHUB_OWNER }}
         ./main cancel
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
