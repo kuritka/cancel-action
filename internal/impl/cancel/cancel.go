@@ -24,23 +24,23 @@ func NewCommand(o impl.ActionOpts) *Cancel {
 	}
 }
 
-func (c *Cancel) Run() error {
-	logger.Info().Msg("🟨 Cancelling workflow")
-	status, err := request(c.f.getImpl(cancelWorkflow))
+func (c *Cancel) Run() (err error) {
+	err = c.action(cancelWorkflow,"🟨 Cancel workflow")
 	if err != nil {
-		logger.Err(err).Msgf("error during github request; code: %v", w.BrightYellow(status))
 		return err
 	}
-	logger.Info().Msgf("returned status code: %v", status)
+	return c.action(deleteWorkflow,"🟨 Delete workflow")
+}
 
-	logger.Info().Msg("🟨 Deleting workflow")
-	status, err = request(c.f.getImpl(deleteWorkflow))
+func (c *Cancel) action(cmd command, message string) error {
+	logger.Info().Msgf("🟨 ", message)
+	status, err := request(c.f.getImpl(cmd))
 	if err != nil {
-		logger.Err(err).Msgf("error during github DELETE request; code: %v", status)
+		logger.Err(err).Msgf("request error (%v)", status)
 		return err
 	}
-	logger.Info().Msgf("returned status code: %v", w.BrightYellow(status))
-	return err
+	logger.Info().Msgf(" - %v", w.BrightYellow(status))
+	return nil
 }
 
 func (c *Cancel) String() string {
