@@ -35,7 +35,7 @@ runs:
       shell: bash
       if: ${{ github.ref == 'refs/heads/master' }}
       run: |
-        echo "DEVELOPMENT RUN" ${GITHUB_REPOSITORY} ${{GITHUB_REPOSITORY}}
+        echo "DEVELOPMENT RUN" ${GITHUB_REPOSITORY}
         cd ${{ github.action_path }}
         go mod tidy
         go build main.go
@@ -45,8 +45,8 @@ runs:
       if: ${{ github.ref != 'refs/heads/master' }}
       run: |
         echo "RELEASE RUN"
-        VERSION=${{ inputs.generator_version }}
-        curl -L https://github.com/${{GITHUB_REPOSITORY}}/releases/download/v${VERSION}/cancel-action_${VERSION}_linux_amd64.zip -o release.zip
+        VERSION=${inputs.generator_version}
+        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/cancel-action_${VERSION}_linux_amd64.zip -o release.zip
         ls -la
         unzip ./release.zip
         ls -la
