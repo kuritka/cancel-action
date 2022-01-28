@@ -25,15 +25,15 @@ func NewCommand(o impl.ActionOpts) *Cancel {
 }
 
 func (c *Cancel) Run() (err error) {
-	err = c.action(cancelWorkflow,"🟨 Cancel workflow")
+	err = c.action(cancelWorkflow, "🟨 Cancel workflow")
 	if err != nil {
 		return err
 	}
-	return c.action(deleteWorkflow,"🟨 Delete workflow")
+	return c.action(deleteWorkflow, "🟨 Delete workflow")
 }
 
 func (c *Cancel) action(cmd command, message string) error {
-	logger.Info().Msgf("🟨 ", message)
+	logger.Info().Msg(message)
 	status, err := request(c.f.getImpl(cmd))
 	if err != nil {
 		logger.Err(err).Msgf("request error (%v)", status)

@@ -37,7 +37,7 @@ func (f *requestFactory) getImpl(cmd command) func() (*http.Request, error) {
 
 func (f *requestFactory) deleteWorkflow() (req *http.Request, err error) {
 	json := new(bytes.Buffer)
-	var url = fmt.Sprintf("https://api.github.com/repos/%s/actions/runs/1760841988", f.opts.GitHub.Repository)
+	var url = fmt.Sprintf("https://api.github.com/repos/%s/actions/runs/%s", f.opts.GitHub.Repository, f.opts.GitHub.RunID)
 	req, err = http.NewRequestWithContext(f.ctx, http.MethodDelete, url, json)
 	logger.Debug().Msgf("hitting URL: %s", url)
 	if err != nil {
