@@ -35,7 +35,6 @@ runs:
       shell: bash
       if: ${{ github.ref == 'refs/heads/master' }}
       run: |
-        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF}/cancel-action_${GITHUB_REF}_linux_amd64.zip -o release.zip
         echo "DEVELOPMENT RUN" $GITHUB_REPOSITORY
         cd ${{ github.action_path }}
         go mod tidy
@@ -46,8 +45,8 @@ runs:
       if: ${{ github.ref != 'refs/heads/master' }}
       run: |
         echo "RELEASE RUN"
-        echo https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF/cancel-action_$GITHUB_REF_linux_amd64.zip -o release.zip
-        curl -L https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF/cancel-action_$GITHUB_REF_linux_amd64.zip -o release.zip
+        echo https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.zip -o release.zip
+        curl -L https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF_NAME/cancel-action_$GITHUB_REF_NAME_linux_amd64.zip -o release.zip
         unzip ./release.zip
 
     - id: main
