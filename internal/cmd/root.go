@@ -20,7 +20,7 @@ var logger = log.Log
 var rootCmd = &cobra.Command{
 	Short: common.Action,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		logger.Info().Msgf("%s %s 🛌 🤺", w.BrightMagenta(common.Action), w.BrightYellow("started"))
+		logger.Info().Msgf("%s %s 🚀", w.BrightMagenta(common.Action), w.BrightYellow("started"))
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {

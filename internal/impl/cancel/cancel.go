@@ -31,8 +31,6 @@ func (c *Cancel) Run() error {
 	}
 	logger.Info().Msgf("returned status code: %v", status)
 
-
-
 	logger.Info().Msg("Deleting....")
 	_, status, err = requestDelete(context.TODO(), c.o.GitHub)
 	if err != nil {
@@ -75,8 +73,6 @@ func request(ctx context.Context, gh impl.GitHub) (result string, status int, er
 	}
 	return string(body), resp.StatusCode, nil
 }
-
-
 
 func requestDelete(ctx context.Context, gh impl.GitHub) (result string, status int, err error) {
 	json := new(bytes.Buffer)

@@ -39,3 +39,4 @@ runs:
         CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
         REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
         VERBOSE: ${{ inputs.verbose }}
+

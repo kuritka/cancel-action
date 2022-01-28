@@ -37,3 +37,4 @@ jobs:
         uses: ./
         with:
           verbose: true
+          token: ${{ secrets.REMOVE_WORKFLOW_TOKEN }}
