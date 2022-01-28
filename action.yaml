@@ -45,8 +45,8 @@ runs:
       if: ${{ github.ref != 'refs/heads/master' }}
       run: |
         echo "RELEASE RUN"
-        echo https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.zip -o release.zip
-        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.zip -o release.zip
+        echo https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.tar.gz -o release.zip
+        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.tar.gz -o release.zip
         unzip ./release.zip
 
     - id: main
@@ -59,4 +59,3 @@ runs:
         CANCEL_WHEN_JOB_SUCCESSFULLY_PASSED: ${{ inputs.cancel-when-job-successfully-passed }}
         REMOVE_ARTIFACT: ${{ inputs.remove-artifact }}
         VERBOSE: ${{ inputs.verbose }}
-
