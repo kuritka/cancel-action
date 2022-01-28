@@ -26,6 +26,10 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Get the version
+      id: get_current_tag
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
     - uses: actions/setup-go@v2
       with:
         go-version: "1.17.6"
@@ -35,8 +39,6 @@ runs:
       if: ${{ startsWith(github.ref, 'refs/heads/') }}
       run: |
         echo "DEVELOPMENT RUN" $GITHUB_REPOSITORY
-        VERSION=${{ inputs.generator_version }}
-        echo ${VERSION}
         cd ${{ github.action_path }}
         go mod tidy
         go build -o cancel-action main.go
@@ -46,7 +48,10 @@ runs:
       if: ${{ !startsWith(github.ref, 'refs/heads/') }}
       run: |
         echo "RELEASE RUN"
-        echo https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.tar.gz
+        VERSION=${{ github.event.release.tag_name }}
+        echo ${VERSION}
+        echo ${{ steps.get_current_tag.outputs.VERSION }}
+
         curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cancel-action_${GITHUB_REF_NAME}_linux_amd64.tar.gz -o release.tar.gz
         tar -xvf ./release.tar.gz
 
