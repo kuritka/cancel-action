@@ -31,6 +31,16 @@ runs:
       with:
         go-version: "1.17.6"
 
+    - id: prepare
+      shell: bash
+      if: ${{ github.ref == 'refs/heads/master' }}
+          steps:
+          - run: echo "DEVELOPMENT"
+
+      if: ${{ github.ref != 'refs/heads/master' }}
+          steps:
+          - run: echo "RELEASE"
+
     - id: main
       shell: bash
       run: |
