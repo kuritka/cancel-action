@@ -43,7 +43,11 @@ runs:
     - id: prepare-release
       shell: bash
       if: ${{ github.ref != 'refs/heads/master' }}
-      run: echo "RELEASE RUN"
+      run: |
+        echo "RELEASE RUN"
+        VERSION=${{ inputs.generator_version }}
+        curl -L https://github.com/kuritka/${{ env.GITHUB_REPOSITORY }}/releases/download/v${VERSION}/cancel-action_${VERSION}_linux_amd64.zip -o tfreg.zip
+        unzip tfreg.zip
 
     - id: main
       shell: bash
