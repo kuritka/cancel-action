@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	w "github.com/logrusorgru/aurora"
+
 	"github.com/kuritka/cancel-action/internal/common/log"
 	"github.com/kuritka/cancel-action/internal/impl"
 )
@@ -23,23 +25,21 @@ func NewCommand(o impl.ActionOpts) *Cancel {
 }
 
 func (c *Cancel) Run() error {
-	logger.Info().Msg("Cancelling....")
-
+	logger.Info().Msg("🟨 Cancelling workflow")
 	status, err := request(c.f.getImpl(cancelWorkflow))
 	if err != nil {
-		logger.Err(err).Msgf("error during github request; code: %v", status)
+		logger.Err(err).Msgf("error during github request; code: %v", w.BrightYellow(status))
 		return err
 	}
 	logger.Info().Msgf("returned status code: %v", status)
 
-	logger.Info().Msg("Deleting....")
+	logger.Info().Msg("🟨 Deleting workflow")
 	status, err = request(c.f.getImpl(deleteWorkflow))
 	if err != nil {
 		logger.Err(err).Msgf("error during github DELETE request; code: %v", status)
 		return err
 	}
-	logger.Info().Msgf("returned status code: %v", status)
-
+	logger.Info().Msgf("returned status code: %v", w.BrightYellow(status))
 	return err
 }
 

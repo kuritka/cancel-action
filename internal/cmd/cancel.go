@@ -8,7 +8,6 @@ import (
 	"github.com/rs/zerolog"
 	"gopkg.in/alecthomas/kingpin.v2"
 
-	"github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +23,6 @@ var cancelCommand = &cobra.Command{
 		if opts.Verbose {
 			zerolog.SetGlobalLevel(zerolog.DebugLevel)
 		}
-		logger.Debug().Msgf("loaded configuration: \n %v", aurora.BrightWhite(opts))
 		runner.NewCommonRunner(cancel.NewCommand(*opts)).MustRun()
 	},
 }
