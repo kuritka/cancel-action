@@ -30,7 +30,6 @@ runs:
       shell: bash
       id: get_action_tag
       run: |
-
         echo ::set-output name=VERSION::$(basename ${{ github.action_path }})
 
     - name: Setup proper GO version
@@ -41,7 +40,7 @@ runs:
     - name: Action is executed locally in feature branch
       id: prepare-development-run
       shell: bash
-      if: ${{ startsWith(steps.get_action_tag.outputs.VERSION, 'refs/heads/') }}
+      if: ${{ startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
         echo "BUILD ACTION" $GITHUB_REPOSITORY ${{ steps.get_action_tag.outputs.VERSION }}
         cd ${{ github.action_path }}
@@ -51,7 +50,7 @@ runs:
     - name: Action is executed in someones workflow
       id: prepare-production-run
       shell: bash
-      if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, 'refs/heads/') }}
+      if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
         echo "DOWNLOAD ACTION" ${{ steps.get_action_tag.outputs.VERSION }}
         curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
