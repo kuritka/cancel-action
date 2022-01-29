@@ -54,7 +54,7 @@ runs:
       if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
         echo -e "\033[1;36m DOWNLOAD ACTION"
-        curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
+        curl -L https://github.com/kuritka/cancel-action/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
         tar -xvf ./release.tar.gz
 
     - id: main
