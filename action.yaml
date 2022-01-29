@@ -25,6 +25,8 @@ inputs:
 
 runs:
   using: composite
+  env:
+    CYAN: \033[1;36m
   steps:
     - name: Get action tag
       shell: bash
@@ -43,7 +45,7 @@ runs:
       shell: bash
       if: ${{ startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
-        echo -e "BUILD ACTION"
+        echo -e ${CYAN}"BUILD ACTION"
         cd ${{ github.action_path }}
         go mod tidy
         go build -o cancel-action main.go
@@ -53,7 +55,7 @@ runs:
       shell: bash
       if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
-        echo -e "DOWNLOAD ACTION"
+        echo -e ${CYAN}"DOWNLOAD ACTION"
         curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
         tar -xvf ./release.tar.gz
 
