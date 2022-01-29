@@ -25,11 +25,15 @@ inputs:
 
 runs:
   using: composite
+  env:
+    YELLOW: \033[0;33m
+    CYAN: \033[1;36m
   steps:
     - name: Get action tag
       shell: bash
       id: get_action_tag
       run: |
+        echo ${{ github.action_path }}
         echo ::set-output name=VERSION::$(basename ${{ github.action_path }})
 
     - name: Setup proper GO version
@@ -42,7 +46,7 @@ runs:
       shell: bash
       if: ${{ startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
-        echo "BUILD ACTION" $GITHUB_REPOSITORY ${{ steps.get_action_tag.outputs.VERSION }}
+        @echo -e ${CYAN}"BUILD ACTION"
         cd ${{ github.action_path }}
         go mod tidy
         go build -o cancel-action main.go
@@ -52,7 +56,7 @@ runs:
       shell: bash
       if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
-        echo "DOWNLOAD ACTION" ${{ steps.get_action_tag.outputs.VERSION }}
+        @echo -e ${CYAN}"DOWNLOAD ACTION"
         curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
         tar -xvf ./release.tar.gz
 
