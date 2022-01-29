@@ -26,29 +26,32 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Get the version
+    - name: Get action tag
       shell: bash
       id: get_action_tag
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-    - uses: actions/setup-go@v2
+    - name: Setup proper GO version
+      uses: actions/setup-go@v2
       with:
         go-version: "1.17.6"
 
-    - id: prepare-development-run
+    - name: Action is executed locally in feature branch
+      id: prepare-development-run
       shell: bash
-      if: ${{ startsWith(github.ref, 'refs/heads/') }}
+      if: ${{ startsWith(steps.get_action_tag.outputs.VERSION, 'refs/heads/') }}
       run: |
-        echo "DEVELOPMENT RUN" $GITHUB_REPOSITORY
+        echo "DEVELOPMENT RUN" $GITHUB_REPOSITORY ${{ steps.get_action_tag.outputs.VERSION }}
         cd ${{ github.action_path }}
         go mod tidy
         go build -o cancel-action main.go
 
-    - id: prepare-production-run
+    - name: Action is executed in someones workflow
+      id: prepare-production-run
       shell: bash
-      if: ${{ !startsWith(github.ref, 'refs/heads/') }}
+      if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, 'refs/heads/') }}
       run: |
-        echo "RELEASE RUN"
+        echo "RELEASE RUN" ${{ steps.get_action_tag.outputs.VERSION }}
         curl -L https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
         tar -xvf ./release.tar.gz
 
