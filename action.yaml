@@ -38,22 +38,22 @@ runs:
       with:
         go-version: "1.17.6"
 
-    - name: Action is executed locally in feature branch
+    - name: Push comes from feature branch
       id: prepare-development-run
       shell: bash
       if: ${{ startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
-        echo -e "\033[1;36m BUILD ACTION"
+        echo -e "\033[1;36m BUILD BINARY"
         cd ${{ github.action_path }}
         go mod tidy
         go build -o cancel-action main.go
 
-    - name: Action is executed in someones workflow
+    - name: Someone uses action in workflow
       id: prepare-production-run
       shell: bash
       if: ${{ !startsWith(steps.get_action_tag.outputs.VERSION, '.') }}
       run: |
-        echo -e "\033[1;36m DOWNLOAD ACTION"
+        echo -e "\033[1;36m DOWNLOAD BINARY"
         curl -L https://github.com/kuritka/cancel-action/releases/download/${{ steps.get_action_tag.outputs.VERSION }}/cancel-action_${{ steps.get_action_tag.outputs.VERSION }}_linux_amd64.tar.gz -o release.tar.gz
         tar -xvf ./release.tar.gz
 
