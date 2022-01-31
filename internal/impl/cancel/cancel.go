@@ -31,7 +31,7 @@ func (c *Cancel) Run() (err error) {
 		return err
 	}
 	fmt.Println(string(b))
-	_ ,err = c.action(cancelWorkflow, "🟨 CANCEL workflow")
+	_, err = c.action(cancelWorkflow, "🟨 CANCEL workflow")
 	return err
 }
 
@@ -53,7 +53,7 @@ func (c *Cancel) String() string {
 func request(f func() (*http.Request, error)) (b []byte, status int, err error) {
 	req, err := f()
 	if err != nil {
-		return nil,0, err
+		return nil, 0, err
 	}
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -69,6 +69,5 @@ func request(f func() (*http.Request, error)) (b []byte, status int, err error) 
 	if err != nil {
 		return body, resp.StatusCode, err
 	}
-	logger.Debug().Msgf("response body: %s", string(body))
 	return body, resp.StatusCode, nil
 }

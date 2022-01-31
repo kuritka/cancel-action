@@ -73,6 +73,6 @@ func (f *requestFactory) readCommit() (req *http.Request, err error) {
 	if err != nil {
 		return
 	}
-	req.Header.Set("Accept","application/vnd.github.v3+json")
+	req.Header.Set("Accept", "application/vnd.github.v3+json")
 	return
 }
