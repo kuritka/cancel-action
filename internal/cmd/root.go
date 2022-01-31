@@ -24,7 +24,7 @@ var rootCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			logger.Info().Msgf("No parameters included")
+			logger.Info().Msgf("No arguments included")
 			_ = cmd.Help()
 			os.Exit(0)
 		}

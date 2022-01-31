@@ -12,4 +12,5 @@ type GitHub struct {
 	Repository string `env:"REPOSITORY, require=true"`
 	RunID      string `env:"RUN_ID, require=true"`
 	Owner      string `env:"REPOSITORY_OWNER, require=true"`
+	CommitSHA  string `env:"SHA, require=true"`
 }

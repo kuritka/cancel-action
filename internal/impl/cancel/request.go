@@ -14,6 +14,7 @@ type command int
 const (
 	deleteWorkflow command = iota
 	cancelWorkflow
+	readCommit
 )
 
 type requestFactory struct {
@@ -31,6 +32,8 @@ func (f *requestFactory) getImpl(cmd command) func() (*http.Request, error) {
 		return f.cancelWorkflow
 	case deleteWorkflow:
 		return f.deleteWorkflow
+	case readCommit:
+		return f.readCommit
 	}
 	return func() (*http.Request, error) { return nil, fmt.Errorf("not implemented") }
 }
@@ -59,5 +62,17 @@ func (f *requestFactory) cancelWorkflow() (req *http.Request, err error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "token "+f.opts.GitHub.Token)
 	req.Header.Set("User-Agent", "actions/cancel-action")
+	return
+}
+
+func (f *requestFactory) readCommit() (req *http.Request, err error) {
+	json := new(bytes.Buffer)
+	var url = fmt.Sprintf("https://api.github.com/repos/%s/commits/%s", f.opts.GitHub.Repository, f.opts.GitHub.CommitSHA)
+	logger.Debug().Msgf("hitting URL: %s", url)
+	req, err = http.NewRequestWithContext(f.ctx, http.MethodGet, url, json)
+	if err != nil {
+		return
+	}
+	req.Header.Set("Accept","application/vnd.github.v3+json")
 	return
 }

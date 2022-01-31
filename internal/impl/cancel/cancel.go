@@ -25,48 +25,50 @@ func NewCommand(o impl.ActionOpts) *Cancel {
 }
 
 func (c *Cancel) Run() (err error) {
-	return c.action(cancelWorkflow, "🟨 Delete workflow")
-	// err = c.action(cancelWorkflow, "🟨 Cancel workflow")
-	// if err != nil {
-	// 	 return err
-	// }
-	// return c.action(deleteWorkflow, "🟨 Delete workflow")
-}
-
-func (c *Cancel) action(cmd command, message string) error {
-	logger.Info().Msg(message)
-	status, err := request(c.f.getImpl(cmd))
+	var b []byte
+	b, err = c.action(readCommit, "🟩 READ commit")
 	if err != nil {
-		logger.Err(err).Msgf("request error (%v)", status)
 		return err
 	}
+	fmt.Println(string(b))
+	_ ,err = c.action(cancelWorkflow, "🟨 CANCEL workflow")
+	return err
+}
+
+func (c *Cancel) action(cmd command, message string) ([]byte, error) {
+	logger.Info().Msg(message)
+	body, status, err := request(c.f.getImpl(cmd))
+	if err != nil {
+		logger.Err(err).Msgf("request error (%v)", status)
+		return body, err
+	}
 	logger.Info().Msgf(" - %v", w.BrightYellow(status))
-	return nil
+	return body, nil
 }
 
 func (c *Cancel) String() string {
 	return "CANCEL ACTION"
 }
 
-func request(f func() (*http.Request, error)) (status int, err error) {
+func request(f func() (*http.Request, error)) (b []byte, status int, err error) {
 	req, err := f()
 	if err != nil {
-		return 0, err
+		return nil,0, err
 	}
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return nil, resp.StatusCode, err
 	}
 	// nolint:errcheck
 	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode > 208 {
-		return resp.StatusCode, fmt.Errorf(resp.Status)
+		return nil, resp.StatusCode, fmt.Errorf(resp.Status)
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return resp.StatusCode, err
+		return body, resp.StatusCode, err
 	}
 	logger.Debug().Msgf("response body: %s", string(body))
-	return resp.StatusCode, nil
+	return body, resp.StatusCode, nil
 }
